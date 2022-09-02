@@ -1,0 +1,414 @@
+
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dosis:wght@200;300;400;500;600;700;800&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .container {
+        height: 100vh;
+        width: 100vw;
+      }
+
+      .absolute {
+        position: absolute;
+      }
+
+      .white-background {
+        background-color: white;
+        height: 100vh;
+        overflow: hidden;
+        border-radius: 20%;
+      }
+
+      .filter-blur-contrast {
+        filter: blur(15px) contrast(30) saturate(.25);
+      }
+
+      .filter-blur-contrast2-drop {
+        filter: blur(5px) contrast(20) saturate(.25);
+        background-color: white;
+        height: 15vh;
+        z-index: -10;
+      }
+
+      .center {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+      }
+
+      /* animate */
+      .wave1 {
+        width: 350px;
+        height: 350px;
+        border-radius: 50%;
+        background-color: cadetblue;
+        animation: animate infinite linear forwards;
+        animation-duration: 10s;
+        transition: 3s background ease;
+      }
+
+      /* animate2 */
+      .wave1::after {
+        content: '';
+        position: absolute;
+        width: 60%;
+        height: 60%;
+        border-radius: 50%;
+        transform: translate(13px, 20px);
+        opacity: 0.5;
+        background-color: cadetblue;
+        animation: animate2 3s infinite alternate;
+        transition: 5s background ease;
+      }
+
+      /* animate3 */
+      .wave1::before {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        transform: translate(50px, 50px);
+        background-color: cadetblue;
+        animation: animate3 4s infinite forwards;
+        transition: 4s background ease;
+      }
+
+      /* 滑鼠移動到水灘上時  水灘變白 (消失) ---------------*/
+      .wave1:hover,
+      .wave1:hover::after,
+      .wave1:hover::before {
+        background: white;
+        filter: blur(30px);
+      }
+
+
+
+      /* 時鐘文字 ----------------------*/
+      .clock {
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+
+        font-family: 'Dosis', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+        /* ↓穿透顯示 */
+        pointer-events: none;
+
+        background: rgba(245, 222, 179, 0.422);
+        mix-blend-mode: darken;
+        /* background-blend-mode: lighten; */
+      }
+
+      .display-none {
+        display: none;
+      }
+
+      .fade-out {
+        opacity: 1;
+        animation: fade-out 0.8s 1 forwards;
+      }
+
+      #hourbox {
+        width: 100px;
+        height: 50%;
+        color: white;
+        font-size: 50px;
+        position: absolute;
+        left: calc(50% - 50px);
+        top: 0%;
+        transform: rotate(0deg);
+        /* ↓旋轉的圓心移動 */
+        transform-origin: bottom center;
+
+        /* background: red; */
+      }
+
+      #minbox {
+        width: 100px;
+        height: 70%;
+        color: white;
+        position: absolute;
+        font-size: 40px;
+
+        left: calc(50% - 50px);
+        top: -20%;
+        transform: rotate(0deg);
+        transform-origin: bottom center;
+
+        /* background: green; */
+      }
+
+      #secbox {
+        width: 100px;
+        height: 90%;
+        color: white;
+        font-size: 30px;
+        position: absolute;
+        left: calc(50% - 50px);
+        top: -40%;
+        transform: rotate(0deg);
+        transform-origin: bottom center;
+
+        /* background: blue; */
+      }
+
+      .text {
+        position: absolute;
+        z-index: 10;
+        left: 50%;
+        top: 15px;
+        transform: translate(-50%, 0);
+      }
+
+      .waterdrop {
+        height: 80px;
+        width: 80px;
+        border-radius: 50%;
+        margin-top: 10px;
+
+        position: absolute;
+        /* transform: translate(10px, 0px); */
+
+        /* background: fuchsia; */
+      }
+
+      /* 時間數滴水 ------------------- */
+      /* 時 */
+      .waterdrop-translate-hour {
+        transform: translate(10px, 150px);
+        animation: drop-second 3s 1 forwards;
+        background-color: rgb(151, 214, 214);
+
+      }
+
+
+      /* 分 */
+      .waterdrop-translate-minute {
+        transform: translate(10px, 200px);
+        animation: drop-second 3s 1 forwards;
+        background-color: rgb(151, 214, 214);
+
+      }
+
+      /* 秒  兩個  後一個只跑一次 */
+      .waterdrop-translate-second {
+        transform: translate(10px, 250px);
+        animation: drop-second 1s infinite backwards;
+        background-color: cadetblue;
+      }
+
+      .waterdrop-translate-second2 {
+        transform: translate(10px, 250px);
+        animation: drop-second 1s 1 forwards;
+        background-color: cadetblue;
+      }
+
+
+      #mix-wave {
+        height: 80vh;
+        mix-blend-mode: soft-light;
+        opacity: 0.2;
+        pointer-events: none;
+      }
+
+      /* 淡出動畫 */
+      @keyframes fade-out {
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* 水滴(clock)動畫 */
+      @keyframes drop-second {
+        100% {
+          transform: translate(10px, 0px);
+        }
+      }
+
+      /* 水灘(水波)動畫 -------------------------------- */
+      @keyframes animate {
+
+        0% {
+          border-radius: 50%;
+        }
+
+        25% {
+          transform: translate(-10px, -5px) rotate(90deg) scale(1.1);
+          border-radius: 60% 40% 45% 60%;
+        }
+
+        50% {
+          transform: translate(10px, 0px) rotate(180deg) scale(1.12);
+          border-radius: 30% 50% 50% 40%;
+        }
+
+        75% {
+          transform: translate(5px, -10px) rotate(270deg) scale(1.2);
+          border-radius: 50% 40%;
+        }
+
+        100% {
+          transform: translate(0px, 0px) rotate(360deg);
+          /* border-radius: 45%; */
+          border-radius: 50%;
+        }
+      }
+
+      @keyframes animate2 {
+
+        50% {
+          transform: translate(200px, 100px) scale(1.2);
+          border-radius: 40%;
+          opacity: .7;
+        }
+      }
+
+      @keyframes animate3 {
+
+        25% {
+          transform: translate(5px, 15px) scale(1.1) rotate(45deg);
+          border-radius: 45%;
+        }
+
+        50% {
+          transform: translate(-10px, 5px) scale(1.5) rotate(100deg);
+          opacity: .7;
+          border-radius: 48%;
+        }
+
+        75% {
+          transform: translate(-20px, 0px) scale(.7) rotate(180deg);
+          border-radius: 43%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+
+
+    <!-- 有偽元素的水灘 -->
+    <div class="container">
+
+      <div class="white-background filter-blur-contrast ">
+        <div class="wave1 center"></div>
+      </div>
+    </div>
+
+
+
+    <!-- 時鐘部分 --------------------------------->
+
+    <div class="clock center display-none fade-out">
+      <!-- 時 -->
+      <div id="hourbox">
+        <p id="hourboxText" class="text">hr</p>
+
+        <div class="waterdrop waterdrop-translate-hour"></div>
+
+      </div>
+      <!-- 分 -->
+      <div id="minbox">
+        <p id="minboxText" class="text">min</p>
+
+        <div class="waterdrop waterdrop-translate-minute"></div>
+
+      </div>
+      <!-- 秒 -->
+      <div id="secbox">
+        <p id="secboxText" class="text">sec</p>
+
+        <div class=" filter-blur-contrast2-drop">
+          <div class="waterdrop waterdrop-translate-second"></div>
+          <div class="waterdrop waterdrop-translate-second2"></div>
+        </div>
+
+      </div>
+
+
+    </div>
+
+    <div class="gif-wave display-none">
+      <img src="images/waterTwo.gif" id="mix-wave" class="center">
+    </div>
+
+
+    <script>
+      // 抓時間
+        let nowTime = new Date()
+        let hour = nowTime.getHours()
+        console.log(nowTime.getHours())
+        console.log(new Date().getSeconds())
+
+
+        /* 轉格子--------------------------------------------------- */
+        // 360 (deg)  /  12 (hour)  = 30 (每一小時ㄌ轉30度)
+        const hourbox = document.getElementById('hourbox')
+        
+        // 轉格子  360 (deg)  /  60 (min)  = 6 (每一分ㄌ轉6度)
+        const minbox = document.getElementById('minbox')
+        
+        const secbox = document.getElementById('secbox')
+        
+        
+        
+        setInterval(() => {
+            hourbox.style.transform = `rotate(${30 * new Date().getHours() }deg)`
+            minbox.style.transform = `rotate(${6 * new Date().getMinutes() }deg)`
+            secbox.style.transform = `rotate(${6 * new Date().getSeconds() }deg)`
+        }, 1000);
+
+
+
+        /* 取代數字 ------------------------------------------------- */
+        setInterval(() => {
+            hourboxText.innerText = new Date().getHours()
+            minboxText.innerText = new Date().getMinutes()
+            secboxText.innerText = new Date().getSeconds()
+        }, 1000);
+        
+
+        // 當 wave1  被onmouseover  (hover的意思)    clock 的 display 就會消失 (最好漸變
+        const wave1 = document.querySelector('.wave1')
+        const clock = document.querySelector('.clock')
+        const gifWave = document.querySelector('.gif-wave')
+
+        // 滑鼠移上去
+        wave1.onmouseover = () => {
+          clock.classList.toggle("display-none");
+          clock.classList.toggle("fade-out");
+          gifWave.classList.toggle("display-none");
+        }
+
+        // 滑鼠移開
+        wave1.onmouseout = () => {
+          clock.classList.toggle("fade-out");
+          setTimeout(() =>{
+            clock.classList.toggle("display-none");
+          },800)
+          
+        }
+
+
+    </script>
+  </body>
+
+  </html>
